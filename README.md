@@ -1,64 +1,218 @@
-# Seamless Bitcoin-Stacks Interoperability (sBTC Enhancements)
+# sBTC Clarity Contract
 
-This project enhances the usability and adoption of sBTC by automating key features, simplifying user interactions, and incentivizing liquidity provision. The smart contract, written in Clarity, integrates Bitcoin and Stacks seamlessly to position Stacks as a reliable Bitcoin Layer 2.
+This repository contains the `sBTC` Clarity contract designed to facilitate the conversion of BTC to sBTC, manage liquidity, and support atomic swaps. The contract includes features for wrapping and unwrapping BTC, adding and claiming liquidity rewards, and providing time-locked recovery options for users.
+
+The contract is designed to support a decentralized sBTC token ecosystem, allowing for secure transactions and liquidity management.
+
+---
 
 ## Features
 
-1. **Wrapping/Unwrapping BTC:**
-   - Users can easily convert Bitcoin (BTC) to sBTC and vice versa with simple function calls.
+- **Wrap and Unwrap BTC**: 
+  - Convert BTC to sBTC and vice versa with defined conversion rates.
+  
+- **Atomic Swap**: 
+  - Swap STX for sBTC, enabling seamless conversion between STX and BTC-backed tokens.
+  
+- **Liquidity Management**:
+  - Add liquidity to the sBTC pool and earn rewards calculated based on the liquidity provided.
+  - Claim rewards for liquidity providers.
+  
+- **Time-Locked Recovery**: 
+  - Recovery process with a time lock to ensure security for the recovery actions.
 
-2. **Atomic Swaps:**
-   - Enable frictionless swaps between STX and BTC, laying the groundwork for a robust trading ecosystem.
+- **Dynamic Rate Adjustment**: 
+  - Allows the contract owner to adjust the BTC-to-sBTC and STX-to-sBTC conversion rates to reflect market changes.
 
-3. **Incentives for Liquidity Providers:**
-   - Liquidity providers can contribute to sBTC liquidity and claim rewards.
+---
 
-4. **Time-Locked Recovery:**
-   - A security feature for safe handling of wrapping and unwrapping operations.
+## Contract Functions
 
-## Smart Contract Details
+### 1. **Wrap BTC to sBTC**
+Converts a specified amount of BTC into sBTC at the current conversion rate.
 
-### Data Variables
-- `sBTC-price`: Tracks the price of sBTC (currently set to `0` as a placeholder).
-- `sBTC-liquidity`: Maintains the total liquidity of sBTC in the system.
-- `btc-to-sBTC-rate`: Conversion rate from BTC to sBTC (default: `1 BTC = 1000 sBTC`).
+```clarity
+(define-public (wrap-btc (btc-amount uint))
+```
 
-### Public Functions
+**Parameters**:
+- `btc-amount`: The amount of BTC to convert.
 
-#### `wrap-btc (btc-amount uint)`
-Converts a specified amount of BTC into sBTC based on the current conversion rate.
+**Returns**:
+- A wrapped sBTC amount, or an error if the amount is not positive.
 
-#### `unwrap-sbtc (sBTC-amount uint)`
-Converts a specified amount of sBTC back into BTC.
+---
 
-#### `atomic-swap (stx-amount uint, btc-amount uint)`
-Facilitates an atomic swap between specified amounts of STX and BTC.
+### 2. **Unwrap sBTC to BTC**
+Converts a specified amount of sBTC back to BTC at the current conversion rate.
 
-#### `time-locked-recovery (recovery-id uint)`
-Provides a mechanism for time-locked recovery operations.
+```clarity
+(define-public (unwrap-sbtc (sBTC-amount uint))
+```
 
-#### `add-liquidity (liquidity uint)`
-Allows liquidity providers to add to the sBTC pool, increasing its availability.
+**Parameters**:
+- `sBTC-amount`: The amount of sBTC to convert.
 
-#### `claim-reward (provider-id uint)`
-Enables liquidity providers to claim rewards based on their contributions.
+**Returns**:
+- The unwrapped BTC amount, or an error if the amount is not positive.
 
-## Setup and Deployment
+---
 
-1. Install the necessary dependencies for Clarity development.
-2. Clone this repository and navigate to the project directory.
-3. Deploy the smart contract on the Stacks blockchain using a local development environment or the Stacks Testnet.
+### 3. **Atomic Swap**
+Performs an atomic swap between STX and BTC by converting STX into sBTC.
 
-## Usage
+```clarity
+(define-public (atomic-swap (stx-amount uint) (btc-amount uint))
+```
 
-1. Call the relevant functions via a Clarity-compatible interface (e.g., Hiro Wallet, Stacks CLI, or custom dApps).
-2. Monitor liquidity and rewards using the state variables and reward claiming functions.
-3. Ensure valid inputs to prevent errors (e.g., values greater than `0`).
+**Parameters**:
+- `stx-amount`: The amount of STX to swap.
+- `btc-amount`: The amount of BTC to receive.
+
+**Returns**:
+- The swapped STX and BTC amounts, and the equivalent sBTC amount.
+
+---
+
+### 4. **Add Liquidity**
+Allows liquidity providers to add liquidity to the sBTC pool and earn rewards.
+
+```clarity
+(define-public (add-liquidity (liquidity uint))
+```
+
+**Parameters**:
+- `liquidity`: The amount of liquidity to add.
+
+**Returns**:
+- The updated liquidity pool and the added reward.
+
+---
+
+### 5. **Claim Reward**
+Allows liquidity providers to claim rewards based on their liquidity contributions.
+
+```clarity
+(define-public (claim-reward (provider-id uint))
+```
+
+**Parameters**:
+- `provider-id`: The ID of the liquidity provider.
+
+**Returns**:
+- The claimed reward for the liquidity provider.
+
+---
+
+### 6. **Time-Locked Recovery**
+Initiates a recovery process that is locked until the specified unlock time.
+
+```clarity
+(define-public (time-locked-recovery (recovery-id uint))
+```
+
+**Parameters**:
+- `recovery-id`: A unique identifier for the recovery process.
+
+**Returns**:
+- The recovery process for the given ID or an error if invalid.
+
+---
+
+### 7. **Adjust Conversion Rates**
+Allows the contract owner to adjust the BTC-to-sBTC and STX-to-sBTC conversion rates.
+
+```clarity
+(define-public (adjust-btc-to-sBTC-rate (new-rate uint))
+(define-public (adjust-stx-to-sBTC-rate (new-rate uint))
+```
+
+**Parameters**:
+- `new-rate`: The new conversion rate to set.
+
+**Returns**:
+- A success message or an error if the rate is invalid.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Clarity Language**: Ensure you are familiar with the Clarity language used for smart contracts on the Stacks blockchain.
+- **Stacks Network**: This contract interacts with the Stacks blockchain. Make sure you have access to a Stacks node or an appropriate environment like the Stacks testnet or mainnet.
+  
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/sBTC.git
+   cd sBTC
+   ```
+
+2. **Deploy the contract**:
+   Use the Stacks CLI or a compatible Stacks IDE (like Clarinet or ClarityHub) to deploy the contract to the Stacks network.
+
+   ```bash
+   stacks-cli deploy --contract sBTC.clar
+   ```
+
+3. **Interact with the contract**:
+   Once deployed, you can interact with the contract through the Stacks CLI, or a frontend interface (e.g., a React app with a Stacks wallet).
+
+### Example Usage
+
+#### Wrap BTC to sBTC
+
+To convert BTC to sBTC:
+
+```bash
+clarity-cli call wrap-btc --args 1000
+```
+
+This will convert 1000 BTC to sBTC based on the current conversion rate.
+
+#### Unwrap sBTC to BTC
+
+To convert sBTC back to BTC:
+
+```bash
+clarity-cli call unwrap-sbtc --args 1000
+```
+
+This will convert 1000 sBTC to BTC.
+
+#### Add Liquidity
+
+To add liquidity and receive rewards:
+
+```bash
+clarity-cli call add-liquidity --args 5000
+```
+
+This will add 5000 units of liquidity to the sBTC pool and calculate the corresponding reward.
+
+---
+
+## Security Considerations
+
+- Ensure that only the contract owner can adjust conversion rates and make sensitive changes.
+- Liquidity rewards should be carefully managed to prevent misuse or exploitation by malicious actors.
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please fork this repository and submit a pull request for review.
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -am 'Add new feature'`).
+4. Push to your fork (`git push origin feature-branch`).
+5. Submit a pull request.
+
+---
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
