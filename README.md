@@ -1,64 +1,134 @@
-# Seamless Bitcoin-Stacks Interoperability (sBTC Enhancements)
+# sBTC Enhancement Project
 
-This project enhances the usability and adoption of sBTC by automating key features, simplifying user interactions, and incentivizing liquidity provision. The smart contract, written in Clarity, integrates Bitcoin and Stacks seamlessly to position Stacks as a reliable Bitcoin Layer 2.
+## Overview
+The sBTC Enhancement Project aims to improve Bitcoin-Stacks interoperability by developing smart contracts that enhance the usability of sBTC (Stacks Bitcoin). This project provides automated features for wrapping/unwrapping BTC, atomic swaps, and implements security measures for safer Bitcoin transactions on the Stacks blockchain.
 
-## Features
+## Project Goals
+- Simplify the process of wrapping and unwrapping BTC into sBTC
+- Enable atomic swaps between STX and BTC
+- Create incentive mechanisms for liquidity providers
+- Implement time-locked recovery systems
+- Position Stacks as a reliable Bitcoin Layer 2 solution
 
-1. **Wrapping/Unwrapping BTC:**
-   - Users can easily convert Bitcoin (BTC) to sBTC and vice versa with simple function calls.
+## Technical Architecture
 
-2. **Atomic Swaps:**
-   - Enable frictionless swaps between STX and BTC, laying the groundwork for a robust trading ecosystem.
+### Smart Contracts
+The project consists of the following main components:
+- Core sBTC wrapping/unwrapping contract
+- Atomic swap functionality
+- Liquidity provider incentive system
+- Time-locked recovery mechanisms
 
-3. **Incentives for Liquidity Providers:**
-   - Liquidity providers can contribute to sBTC liquidity and claim rewards.
+### Prerequisites
+- Clarity CLI
+- Node.js v14 or higher
+- Stacks blockchain local development environment
+- Bitcoin node (for testing)
 
-4. **Time-Locked Recovery:**
-   - A security feature for safe handling of wrapping and unwrapping operations.
+### Setup Instructions
 
-## Smart Contract Details
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/sbtc-enhancement.git
+cd sbtc-enhancement
+```
 
-### Data Variables
-- `sBTC-price`: Tracks the price of sBTC (currently set to `0` as a placeholder).
-- `sBTC-liquidity`: Maintains the total liquidity of sBTC in the system.
-- `btc-to-sBTC-rate`: Conversion rate from BTC to sBTC (default: `1 BTC = 1000 sBTC`).
+2. Install dependencies:
+```bash
+npm install
+```
 
-### Public Functions
+3. Start local Stacks blockchain:
+```bash
+clarinet integrate
+```
 
-#### `wrap-btc (btc-amount uint)`
-Converts a specified amount of BTC into sBTC based on the current conversion rate.
+### Contract Deployment
 
-#### `unwrap-sbtc (sBTC-amount uint)`
-Converts a specified amount of sBTC back into BTC.
+1. Configure your deployment settings in `Clarinet.toml`
 
-#### `atomic-swap (stx-amount uint, btc-amount uint)`
-Facilitates an atomic swap between specified amounts of STX and BTC.
+2. Deploy the contract:
+```bash
+clarinet deploy
+```
 
-#### `time-locked-recovery (recovery-id uint)`
-Provides a mechanism for time-locked recovery operations.
+## Smart Contract Functions
 
-#### `add-liquidity (liquidity uint)`
-Allows liquidity providers to add to the sBTC pool, increasing its availability.
+### Core Functions
 
-#### `claim-reward (provider-id uint)`
-Enables liquidity providers to claim rewards based on their contributions.
+#### initialize-wrap
+Initiates the BTC to sBTC wrapping process.
+```clarity
+(define-public (initialize-wrap (btc-tx-hash (buff 32)) (amount uint)))
+```
 
-## Setup and Deployment
+#### complete-wrap
+Completes the wrapping process after BTC confirmation.
+```clarity
+(define-public (complete-wrap (btc-tx-hash (buff 32))))
+```
 
-1. Install the necessary dependencies for Clarity development.
-2. Clone this repository and navigate to the project directory.
-3. Deploy the smart contract on the Stacks blockchain using a local development environment or the Stacks Testnet.
+#### initiate-unwrap
+Starts the unwrapping process from sBTC to BTC.
+```clarity
+(define-public (initiate-unwrap (amount uint)))
+```
 
-## Usage
+### Administrative Functions
 
-1. Call the relevant functions via a Clarity-compatible interface (e.g., Hiro Wallet, Stacks CLI, or custom dApps).
-2. Monitor liquidity and rewards using the state variables and reward claiming functions.
-3. Ensure valid inputs to prevent errors (e.g., values greater than `0`).
+#### set-minimum-wrap-amount
+Allows contract owner to set minimum wrap amount.
+```clarity
+(define-public (set-minimum-wrap-amount (new-amount uint)))
+```
+
+## Testing
+
+Run the test suite:
+```bash
+clarinet test
+```
+
+## Security Considerations
+- Minimum amount restrictions to prevent dust attacks
+- Owner-only administrative functions
+- Balance checks for all operations
+- Pending wrap verification system
+
+## Development Roadmap
+
+### Phase 1 (Current)
+- Basic wrapping/unwrapping functionality
+- User balance management
+- Administrative controls
+
+### Phase 2
+- Atomic swap implementation
+- Enhanced security measures
+
+### Phase 3
+- Liquidity provider incentives
+- Advanced error handling
+
+### Phase 4
+- Time-locked recovery system
+- Event notification system
+
+### Phase 5
+- Performance optimizations
+- Additional security enhancements
 
 ## Contributing
-
-Contributions are welcome! Please fork this repository and submit a pull request for review.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
+This project is licensed under the MIT License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Acknowledgments
+- Bitcoin Core Team
+- Stacks Foundation
+- sBTC Working Group
